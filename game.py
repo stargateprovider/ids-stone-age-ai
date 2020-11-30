@@ -72,12 +72,13 @@ class game():
             [slot, amount] = self.players[turn].play(self.slots, self.resources, self.maxMeeples, [self.stacks[i][0] for i in range(4)], [len(self.stacks[i]) for i in range(4)], self.prodlvl, self.points)
             amount = int(amount)
             if not slot in self.slots or amount > self.meeples[turn] or amount+sum(self.slots[slot]) > self.maxes[slot]:
-                print (self.meeples[turn])
                 print (f"Invalid play! turn: {turn}, slot: {slot}, amount: {amount}")
+                continue
             else:
                 self.meeples[turn] -= amount
                 self.slots[slot][turn] += amount
                 turn = (turn+1)%self.num
+                
     def resolve_workers(self):
         over = False
         turn = self.starting
@@ -143,7 +144,8 @@ class game():
                     self.stacks[3].pop(0)
                     self.points[turn] += price
             if self.slots['prod'][turn]:
-                self.prodlvl[turn]+=1                    
+                self.prodlvl[turn]+=1     
+                               
             for slot in self.slots:
                 self.slots[slot][turn] = 0
             self.meeples[turn] = self.maxMeeples[turn]
@@ -153,7 +155,7 @@ class game():
             if self.resources['food'][turn]+self.prodlvl[turn] < self.meeples[turn]:
                 self.points[turn] -= 10
             else:
-                self.slots['food'][turn] -= (self.meeples[turn]-self.prodlvl[turn])
+                self.resources['food'][turn] -= (self.meeples[turn]-self.prodlvl[turn])
             turn = (turn+1)%self.num
             
         self.starting = (self.starting+1)%self.num
