@@ -12,9 +12,10 @@ class randomPlayer():
                         'card1': 1,
                         'card2': 1,
                         'card3': 1,
-                        'card4': 1
+                        'card4': 1,
+                        'prod': 1
                      }
-    def play(self, slots, resources, maxMeeples, topCards, stackHeights):
+    def play(self, slots, resources, maxMeeples, topCards, stackHeights, prod, points):
         slot = random.choice(list(slots))
         maxAmount = 0
         meeples = maxMeeples[self.playerNum]
@@ -24,4 +25,5 @@ class randomPlayer():
             slot = random.choice(list(slots))
             maxAmount = min(meeples, self.maxes[slot]-sum(slots[slot]))
         amount = random.randrange(1,maxAmount+1)
+        print(meeples)
         return [slot, amount]
