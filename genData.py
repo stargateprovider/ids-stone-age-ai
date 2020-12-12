@@ -64,15 +64,15 @@ if os.path.isfile(model_file):
 else:
     print("No model file, creating model...", end="\t")
     model = KNeighborsClassifier(n_neighbors = 100)
-    t1 = TrainedPlayer(0, model = fitModel(lastfilepath, model))
+    #t1 = TrainedPlayer(0, model = fitModel(lastfilepath, model))
     print("Done!")
 
 
 for j in range(10000):
     players = [
-        SavingPlayer(t1),
-        SavingPlayer(RandomPlayer(1)),
-        SavingPlayer(RandomPlayer(2))
+        SavingPlayer(WeighedRandomPlayer(0)),
+        SavingPlayer(WeighedRandomPlayer(1)),
+        SavingPlayer(WeighedRandomPlayer(2))
     ]
     g = game(players)
     over = False

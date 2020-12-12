@@ -48,23 +48,9 @@ class RandomPlayer():
             meeples -= slots[slot][self.playerNum]
         return meeples
 
-class WeighedRandomPlayer():
-    maxes = {
-        'wood': 7,
-        'clay': 7,
-        'stone': 7,
-        'gold': 7,
-        'food': 9999999999999,
-        'tent': 2,
-        'card1': 1,
-        'card2': 1,
-        'card3': 1,
-        'card4': 1,
-        'prod': 1
-    }
+class WeighedRandomPlayer(RandomPlayer):
     def __init__(self, playerNum):
-        self.playerNum = playerNum
-
+        super().__init__(playerNum)
 
     def canBuy(self, card, resources):
         cant = False
@@ -92,12 +78,6 @@ class WeighedRandomPlayer():
         amount = random.randrange(1,maxAmount+1)
         #print(f"{slot} {amount}")
         return [slot, amount]
-
-    def getFreeMeeples(self, slots, maxMeeples):
-        meeples = maxMeeples[self.playerNum]
-        for slot in slots:
-            meeples -= slots[slot][self.playerNum]
-        return meeples
 
 
 class TrainedPlayer(RandomPlayer):
