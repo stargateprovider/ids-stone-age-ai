@@ -6,12 +6,15 @@ from sklearn import preprocessing
 from game import game
 from players import *
 
+prefix = input("Datasets folder path: ")
+if prefix: prefix += "/"
+
 i = 1
-filepath = lastfilepath = f"dataset{i}.csv"
+filepath = lastfilepath = f"{prefix}dataset{i}.csv"
 while os.path.isfile(filepath):
     i += 1
     lastfilepath = filepath
-    filepath = filepath[:7] + str(i) + ".csv"
+    filepath = filepath[:len(prefix)+7] + str(i) + ".csv"
 
 gTemp = game([])
 
@@ -59,10 +62,10 @@ model_file = "KNN100model"
 if os.path.isfile(model_file):
     t1 = TrainedPlayer(0, model_file = model_file)
 else:
-    print("No model file, creating model...")
+    print("No model file, creating model...", end="\t")
     model = KNeighborsClassifier(n_neighbors = 100)
     t1 = TrainedPlayer(0, model = fitModel(lastfilepath, model))
-    print("Model ready.")
+    print("Done!")
 
 
 for j in range(10000):
@@ -76,7 +79,7 @@ for j in range(10000):
     while not over:
         g.make_plays()
         over = g.resolve_workers()
-    print (f"Scores: {g.points}")
+    print (f"Scores: {g.points}", end="\t")
     
     avgpoints = sum(g.points)/3
     fit = [i-avgpoints for i in g.points]
