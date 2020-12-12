@@ -1,8 +1,17 @@
-from game import game
-from physicalPlayer import physicalPlayer
-from randomPlayer import randomPlayer
-from savingPlayer import savingPlayer
+import itertools, os
 import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import preprocessing
+
+from game import game
+from players import *
+
+i = 1
+filepath = lastfilepath = f"dataset{i}.csv"
+while os.path.isfile(filepath):
+    i += 1
+    lastfilepath = filepath
+    filepath = filepath[:7] + str(i) + ".csv"
 
 gTemp = game([])
 
@@ -34,11 +43,35 @@ res = res.astype(dic)
 
 #if col=="moveAmount" else (col: 'float' if col=="fitness" else col:'int32')
 
+def fitModel(dataset, model):
+    df = pd.read_csv(dataset)
+    slots = {"food":1,"wood":2,"clay":3,"stone":4,"gold":5,"card1":6,"card2":7,"card3":8,"card4":9,"prod":10,"tent":11}
+    df = df.applymap(lambda x: slots[x] if x in slots else x)
+
+    X = df.drop("fitness",axis=1)
+    y = df["fitness"]
+    encoder = preprocessing.LabelEncoder()
+    y_enc = encoder.fit_transform(y)
+
+    return model.fit(X,y_enc)
+
+model_file = "KNN100model"
+if os.path.isfile(model_file):
+    t1 = TrainedPlayer(0, model_file = model_file)
+else:
+    print("No model file, creating model...")
+    model = KNeighborsClassifier(n_neighbors = 100)
+    t1 = TrainedPlayer(0, model = fitModel(lastfilepath, model))
+    print("Model ready.")
+
+
 for j in range(10000):
-    r1 = savingPlayer(3,0)
-    r2 = savingPlayer(3,1)
-    r3 = savingPlayer(3,2)
-    g = game([r1,r2,r3])
+    players = [
+        SavingPlayer(t1),
+        SavingPlayer(RandomPlayer(1)),
+        SavingPlayer(RandomPlayer(2))
+    ]
+    g = game(players)
     over = False
     while not over:
         g.make_plays()
@@ -48,38 +81,36 @@ for j in range(10000):
     avgpoints = sum(g.points)/3
     fit = [i-avgpoints for i in g.points]
     
-    mems = r1.getMem()
-    mems += r2.getMem()
-    mems += r3.getMem()
+    mems = itertools.chain.from_iterable([p.getMem() for p in players])
+
     for mem in mems:
+        playerNums = (mem[-1], (mem[-1]+1)%3, (mem[-1]+2)%3)
         row = {}
-        for slot in mem[0]:
-            for playerNum in range(3):
-                row[slot+"Slot"+str(playerNum)] = mem[0][slot][[mem[-1],(mem[-1]+1)%3,(mem[-1]+2)%3][playerNum]]
-        for resource in mem[1]:
-            for playerNum in range(3):
-                row[resource+str(playerNum)] = mem[1][resource][[mem[-1],(mem[-1]+1)%3,(mem[-1]+2)%3][playerNum]]
-        for playerNum in range(3):
-            row["maxMeeples"+str(playerNum)] = mem[2][[mem[-1],(mem[-1]+1)%3,(mem[-1]+2)%3][playerNum]]
-        for playerNum in range(3):
-            row["prod"+str(playerNum)] = mem[5][[mem[-1],(mem[-1]+1)%3,(mem[-1]+2)%3][playerNum]]
-        for playerNum in range(3):
-            row["points"+str(playerNum)] = mem[6][[mem[-1],(mem[-1]+1)%3,(mem[-1]+2)%3][playerNum]]
-        for resource in range(4):
-            for i in range(4):
-                row["card"+str(i)+"resource"+str(resource)] = mem[3][i][resource]
+
+        for nr in range(3):
+            playerNr = playerNums[nr]
+
+            for slot in mem[0]:
+                row[f"{slot}Slot{nr}"] = mem[0][slot][playerNr]
+            for resource in mem[1]:
+                row[f"{resource}{nr}"] = mem[1][resource][playerNr]
+            row[f"maxMeeples{nr}"] = mem[2][playerNr]
+            row[f"prod{nr}"] = mem[5][playerNr]
+            row[f"points{nr}"] = mem[6][playerNr]
+
         for i in range(4):
-            row["height"+str(i)] = mem[4][i]
+            for resource in range(4):
+                row[f"card{i}resource{resource}"] = mem[3][i][resource]
+            row[f"height{i}"] = mem[4][i]
+
         row["moveSlot"] = mem[7]
         row["moveAmount"] = mem[8]
         row["fitness"] = fit[mem[-1]]
         
         res=res.append(row, ignore_index=True)
     
-    print (j)
+    print(j)
     if j%300==0:
-        res.to_csv("dataset.csv", index=False)
+        res.to_csv(filepath, index=False)
 
-res.to_csv('dataset.csv', index=False)
-        
-                
+res.to_csv(filepath, index=False)

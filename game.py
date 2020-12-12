@@ -1,9 +1,7 @@
 import random
 class game():
     def __init__(self, players):
-        self.players = []
-        for i in players:
-            self.players.append(i)
+        self.players = [p for p in players]
         self.num = len(self.players)
         self.slots = {'wood': [0]*self.num,
                         'clay': [0]*self.num,
@@ -95,54 +93,23 @@ class game():
                 self.resources['stone'][turn]+=sum([random.randrange(1,7) for i in range(self.slots['stone'][turn])])//5
             if self.slots['gold'][turn]:
                 self.resources['gold'][turn]+=sum([random.randrange(1,7) for i in range(self.slots['gold'][turn])])//6
-            if self.slots['card1'][turn]:
+
+            for nr in range(4):
+                if not self.slots[f'card{nr+1}'][turn]:
+                    continue
+
                 notEnough = False
                 price = 0
                 for i in range(4):
-                    price += self.stacks[0][0][i]*(i+3)
-                    if self.stacks[0][0][i] > self.resources[['wood','clay','stone','gold'][i]][turn]:
+                    price += self.stacks[nr][0][i]*(i+3)
+                    if self.stacks[nr][0][i] > self.resources[['wood','clay','stone','gold'][i]][turn]:
                         notEnough = True
                 if not notEnough:
                     for i in range(4):
-                        self.resources[['wood','clay','stone','gold'][i]][turn] -= self.stacks[0][0][i]
-                    self.stacks[0].pop(0)
+                        self.resources[['wood','clay','stone','gold'][i]][turn] -= self.stacks[nr][0][i]
+                    self.stacks[nr].pop(0)
                     self.points[turn] += price
-            if self.slots['card2'][turn]:
-                notEnough = False
-                price = 0
-                for i in range(4):
-                    price += self.stacks[1][0][i]*(i+3)
-                    if self.stacks[1][0][i] > self.resources[['wood','clay','stone','gold'][i]][turn]:
-                        notEnough = True
-                if not notEnough:
-                    for i in range(4):
-                        self.resources[['wood','clay','stone','gold'][i]][turn] -= self.stacks[1][0][i]
-                    self.stacks[1].pop(0)
-                    self.points[turn] += price
-            if self.slots['card3'][turn]:
-                notEnough = False
-                price = 0
-                for i in range(4):
-                    price += self.stacks[2][0][i]*(i+3)
-                    if self.stacks[2][0][i] > self.resources[['wood','clay','stone','gold'][i]][turn]:
-                        notEnough = True
-                if not notEnough:
-                    for i in range(4):
-                        self.resources[['wood','clay','stone','gold'][i]][turn] -= self.stacks[2][0][i]
-                    self.stacks[2].pop(0)
-                    self.points[turn] += price
-            if self.slots['card4'][turn]:
-                notEnough = False
-                price = 0
-                for i in range(4):
-                    price += self.stacks[3][0][i]*(i+3)
-                    if self.stacks[3][0][i] > self.resources[['wood','clay','stone','gold'][i]][turn]:
-                        notEnough = True
-                if not notEnough:
-                    for i in range(4):
-                        self.resources[['wood','clay','stone','gold'][i]][turn] -= self.stacks[3][0][i]
-                    self.stacks[3].pop(0)
-                    self.points[turn] += price
+
             if self.slots['prod'][turn]:
                 self.prodlvl[turn]+=1     
                                
