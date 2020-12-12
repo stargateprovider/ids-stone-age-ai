@@ -2,7 +2,7 @@ from game import game
 from players import *
 
 #r1 = TrainedPlayer(0,"KNN100model")
-r1 = RandomPlayer(0)
+r1 = WeighedRandomPlayer(0)
 r2 = RandomPlayer(1)
 r3 = RandomPlayer(2)
 g = game([r1,r2,r3])

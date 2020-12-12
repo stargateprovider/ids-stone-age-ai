@@ -48,6 +48,57 @@ class RandomPlayer():
             meeples -= slots[slot][self.playerNum]
         return meeples
 
+class WeighedRandomPlayer():
+    maxes = {
+        'wood': 7,
+        'clay': 7,
+        'stone': 7,
+        'gold': 7,
+        'food': 9999999999999,
+        'tent': 2,
+        'card1': 1,
+        'card2': 1,
+        'card3': 1,
+        'card4': 1,
+        'prod': 1
+    }
+    def __init__(self, playerNum):
+        self.playerNum = playerNum
+
+
+    def canBuy(self, card, resources):
+        cant = False
+        for i in range(4):
+            if card[i]>resources[["wood","clay","stone","gold"][i]][self.playerNum]:
+                cant = True
+        return not cant
+    
+    # Random choices but making food is twice as likely
+    # and cards are bought if and only if the resource requirements are met
+    def play(self, slots, resources, maxMeeples, topCards, stackHeights, prod, points):
+        for i in range(4):
+            if self.canBuy(topCards[i], resources) and sum(slots[f"card{i+1}"])==0:
+                #print(f"card{i+1}")
+                return [f"card{i+1}", 1]
+        
+        availableSlots = ["wood","clay","stone","gold","food","food","tent","prod"]
+        slot = random.choice(availableSlots)
+        maxAmount = 0
+        meeples = self.getFreeMeeples(slots, maxMeeples)
+
+        while not maxAmount:
+            slot = random.choice(availableSlots)
+            maxAmount = min(meeples, self.maxes[slot]-sum(slots[slot]))
+        amount = random.randrange(1,maxAmount+1)
+        #print(f"{slot} {amount}")
+        return [slot, amount]
+
+    def getFreeMeeples(self, slots, maxMeeples):
+        meeples = maxMeeples[self.playerNum]
+        for slot in slots:
+            meeples -= slots[slot][self.playerNum]
+        return meeples
+
 
 class TrainedPlayer(RandomPlayer):
     def __init__(self, playerNum, model_file=None, model=None):
