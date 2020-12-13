@@ -1,6 +1,12 @@
 # ids-stone-age-ai
+
+## Datasets can be created using genData.py
+* Dataset 1 is obtained with 3 RandomPlayers
+* Datasets 2-3 are obtained with 1 TrainedPlayer and 2 RandomPlayers
+* Dataset 4 is obtained with 3 WeighedRandomPlayers
+
 ## Instructions for playing the game:
-* create desired amount of random/physical player object in main.py
+* create desired amount of computer/physical player objects in main.py
 * run main.py
 
 ## Simplified game rules:
@@ -14,3 +20,7 @@
   * Resource fields (max capacity: 7 each) - players can roll a die for each worker they place here and receive the corresponding resource equal to the sum of the dice divided by the value of the resource, rounded down
 * The second phase is the action resolving phase, in that phase all the workers receive their products and go home, one player at a time. At the end of this phase each player has to feed each of their workers 1 food minus their agricultural level. If they don’t have enough food they don’t give any of it away and they lose 10 points.
 * The game ends when one of the card stacks is depleted at the end of a second phase and the player with the highest points wins.
+
+## Compiling
+* The necessary game files can be easily compiled using compile.py
+* This gives slightly better performance
