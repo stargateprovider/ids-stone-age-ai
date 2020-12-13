@@ -85,7 +85,7 @@ def generate(pathPrefix, model_file="", model=None, p1=None, p2=None, p3=None):
         print (f"Scores: {g.points}", end="\t")
         
         #avgpoints = sum(g.points)/3
-        fit = [i for i in g.points]
+        fit = [i//10 for i in g.points]
         
         mems = itertools.chain.from_iterable([p.getMem() for p in players])
 
