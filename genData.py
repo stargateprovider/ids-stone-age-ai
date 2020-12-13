@@ -1,4 +1,4 @@
-import itertools, os
+import itertools, os, sys
 import pandas as pd
 from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -26,13 +26,13 @@ def fitModel(dataset, model):
     return model.fit(X,y_enc)
 
 
-def generate(pathPrefix, model_file=None, model=None, p1=None, p2=None, p3=None):
+def generate(pathPrefix, model_file="", model=None, p1=None, p2=None, p3=None):
     i = 1
-    filepath = lastfilepath = f"{prefix}dataset{i}.csv"
+    filepath = lastfilepath = f"{pathPrefix}dataset{i}.csv"
     while os.path.isfile(filepath):
         i += 1
         lastfilepath = filepath
-        filepath = filepath[:len(prefix)+7] + str(i) + ".csv"
+        filepath = filepath[:len(pathPrefix)+7] + str(i) + ".csv"
 
     if os.path.isfile(model_file):
         print(f"Using model file {model_file}.")
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     prefix = sys.argv[1] if len(sys.argv)>1 else input("Datasets folder path: ")
     if prefix: prefix += "/"
 
-    model_file = sys.argv[2] if len(sys.argv)>2 else None
+    model_file = sys.argv[2] if len(sys.argv)>2 else ""
     model = eval(sys.argv[3]) if len(sys.argv)>3 else None
 
     #model = DecisionTreeClassifier(min_samples_split=2, min_samples_leaf=28)
