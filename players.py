@@ -1,5 +1,5 @@
 import copy, itertools, pickle, random
-import pandas as pd
+
 
 class PhysicalPlayer():
     def __init__(self, amount, playerNum):
@@ -10,6 +10,78 @@ class PhysicalPlayer():
         print(f"\n\nFilled slots: {slots},\n\nresources: {resources},\n\nmaxMeeples: {maxMeeples}\n\ntop cards of stacks: {topCards}\n\ncard stack heights: {stackHeights}\n\nProduction levels: {prod}\n\npoints: {points}")
         res = input(f"Enter your turn, number {self.playerNum}, format: '<name of slot> <amount of meeples>': ")
         return res.split()
+
+class AIPlayer():
+    maxes = {
+            'wood': 7,
+            'clay': 7,
+            'stone': 7,
+            'gold': 7,
+            'food': 9999999999999,
+            'tent': 2,
+            'card1': 1,
+            'card2': 1,
+            'card3': 1,
+            'card4': 1,
+            'prod': 1
+        }
+    v={0: 'wood', 1: 'clay', 2: 'stone', 3: 'gold', 4: 'food', 5: 'tent', 6: 'card1', 7: 'card2', 8: 'card3', 9: 'card4', 10: 'prod'}
+       
+    def __init__(self,playNum,*n):
+        self.playerNum=playNum
+        self.m=[]
+        if len(n)>0:
+            for i in n[0]:
+                rida=[]
+                for j in i:
+                    rida.append(j)
+                self.m.append(rida)
+        else:
+            for i in range(11):
+                rida=[]
+                for j in range(25):
+                    rida.append(random.randint(-100,100))
+                self.m.append(rida)
+
+    def play(self, slots, resources, maxMeeples, topCards, stackHeights, prod, points):
+        r=[]
+        for i in resources:
+            r.append(int(resources[i][self.playerNum]))
+        mM=maxMeeples[self.playerNum]-7
+        tC=[]
+        for i in topCards:
+            tC+=i
+        p=prod[self.playerNum]
+        if points[self.playerNum]==max(points):
+            po=1
+        else:
+            po=-1
+        inp=r+tC+[mM,p,po,sum([slots[i][self.playerNum] for i in slots])]
+        w=[(j,self.v[i]) for i,j in enumerate(self.korruta(inp))]
+        w.sort()
+        for i in w:
+            if sum(slots[i[1]])<self.maxes[i[1]]:
+                if i=="food":
+                    print(self.playerNum,"food")
+                    return [i[1],mM-sum([slots[j][self.playerNum] for j in slots])]
+                else:
+                    print(self.playerNum,[i[1],1])
+                    return [i[1],1]
+
+    def korruta(self,a):
+        b=self.m
+        o=[]
+        for i in b:
+            s=0
+            for j in range(len(i)):
+                s+=a[j]*i[j]
+            o.append(s)
+        return o
+    def setPlayerNum(self,playerNum):
+        self.playerNum=playerNum
+
+
+
 
 
 class RandomPlayer():
@@ -79,7 +151,7 @@ class WeighedRandomPlayer(RandomPlayer):
         #print(f"{slot} {amount}")
         return [slot, amount]
 
-
+'''
 class TrainedPlayer(RandomPlayer):
     def __init__(self, playerNum, model_file=None, model=None):
         super().__init__(playerNum)
@@ -124,7 +196,7 @@ class TrainedPlayer(RandomPlayer):
                     bestMove = [slot,i]
         #print(bestMove)
         return bestMove
-
+'''
 
 class SavingPlayer():
     def __init__(self, player):

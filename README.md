@@ -5,6 +5,10 @@
 * Datasets 2-3 are obtained with 1 TrainedPlayer and 2 RandomPlayers
 * Dataset 4 is obtained with 3 WeighedRandomPlayers
 
+## The matrixes
+* The final data we generated was from playing the game with a AIPlayer, which uses a neural network approach.
+* maatriksf.txt ended up being our best matrix to use for a player
+
 ## Instructions for playing the game:
 * create desired amount of computer/physical player objects in main.py
 * run main.py
