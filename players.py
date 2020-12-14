@@ -34,7 +34,7 @@ class AIPlayer():
             for i in n[0]:
                 rida=[]
                 for j in i:
-                    rida.append(j)
+                    rida.append(j+random.randint(-2,2))
                 self.m.append(rida)
         else:
             for i in range(11):

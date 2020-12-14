@@ -17,7 +17,8 @@ for i in range(1):
 	r1 = AIPlayers.popleft()
 	r1.setPlayerNum(0)
 	r2=PhysicalPlayer(1,1)
-	r3 = WeighedRandomPlayer(2)
+	r1 = AIPlayers.popleft()
+	r1.setPlayerNum(2)
 	rd=[r1,r2,r3]
 	g = game(rd)
 	over = False

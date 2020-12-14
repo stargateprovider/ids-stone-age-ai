@@ -31,3 +31,14 @@
 ## Compiling
 * The necessary game files can be easily compiled using compile.py
 * This gives slightly better performance
+
+## All .py files explained
+* game.py - the class for running the game
+* genDataNN.py - teaches neural networks (output goes to maatriksg.txt)
+* genData.py - generates dataset by letting given type of players play thourgh the game many times and saves the results into dataset[x].csv
+* getAIwinrate.py - tests neural networks in maatriksf.txt for how many games they win agains random players
+* main.py - let's you play through the game once, you can set the players in the beginning of the code
+* players.py - classes for different players
+* plotFromFile.py - generates plot for visualiseNeuralLearning.py using the temporary dump files that visualiseNeuralLearning.py creates while running
+* visualiseMeeplesPerMove.py - generates graph for which fields neural networks in maatriksf.txt place their meeples on on which turns 
+* visualiseNeuralLearning.py - generates graph of model families that are made during training the neural networks

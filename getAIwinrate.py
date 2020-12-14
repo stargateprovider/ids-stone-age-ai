@@ -4,7 +4,7 @@ from random import shuffle
 from collections import deque
 
 #r1 = TrainedPlayer(0,"KNN100model")
-f=open("maatriksf.txt","r")
+f=open("maatriksg.txt","r")
 a=[list(map(int,i.split(" "))) for i in f.readlines()]
 
 AIPlayers=deque()
