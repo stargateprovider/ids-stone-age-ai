@@ -51,7 +51,6 @@ for i in range(1000):
                 moves[slot][counter]+=sum(g.slots[slot])
             counter+=1
             over = g.resolve_workers()
-            print()
         AIPlayers.append(r1)
         if g.points[0]==max(g.points):
                 n+=1
