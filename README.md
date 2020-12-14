@@ -1,13 +1,16 @@
 # ids-stone-age-ai
 
-## Datasets can be created using genData.py
+## Datasets
+* Can be created using genData.py
 * Dataset 1 is obtained with 3 RandomPlayers
 * Datasets 2-3 are obtained with 1 TrainedPlayer and 2 RandomPlayers
 * Dataset 4 is obtained with 3 WeighedRandomPlayers
 
 ## The matrixes
+* Can be generated using genDataNN.py
 * The final data we generated was from playing the game with a AIPlayer, which uses a neural network approach.
 * maatriksf.txt ended up being our best matrix to use for a player
+* DatasetNN1.csv and datasetNN11.csv are examples from when we flattened the matrix file to columns and added the corresponding game points as another column
 
 ## Instructions for playing the game:
 * create desired amount of computer/physical player objects in main.py
