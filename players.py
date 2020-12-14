@@ -62,10 +62,13 @@ class AIPlayer():
         for i in w:
             if sum(slots[i[1]])<self.maxes[i[1]]:
                 if i=="food":
-                    print(self.playerNum,"food")
                     return [i[1],mM-sum([slots[j][self.playerNum] for j in slots])]
+                elif i=="tent":
+                    if mM-sum([slots[j][self.playerNum] for j in slots])>=2:
+                        return ["tent",2]
+                    else:
+                        continue
                 else:
-                    print(self.playerNum,[i[1],1])
                     return [i[1],1]
 
     def korruta(self,a):
